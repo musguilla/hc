@@ -17,63 +17,61 @@ process.on('uncaughtException', (error) => {
   logger.error('Uncaught Exception thrown:', error);
 });
 
-// Initialize Data Storage
-initDataStorage();
+async function runBot() {
+  // 1. Await Database connection and creation of tables
+  await initDataStorage();
 
-// Initialize Express Healthcheck Server
-const app = express();
-const path = require('path');
-const session = require('express-session');
-const adminRoutes = require('./routes/admin');
+  // 2. Initialize Express Healthcheck and Admin Server
+  const app = express();
+  const path = require('path');
+  const session = require('express-session');
+  const adminRoutes = require('./routes/admin');
 
-// Session configuration
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'hashcoin_super_secret_key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 1 day
-}));
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'hashcoin_super_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 1 day
+  }));
 
-// Admin panel route
-app.use('/admin', adminRoutes);
+  app.use('/admin', adminRoutes);
 
-// Serve static assets automatically (index.html will handle /)
-app.use(express.static(path.join(__dirname, '../public')));
+  // Serve static assets automatically (index.html will handle /)
+  app.use(express.static(path.join(__dirname, '../public')));
 
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    service: 'hashcoin-bot',
-    uptime: process.uptime()
+  app.get('/health', (req, res) => {
+    res.json({
+      status: 'ok',
+      service: 'hashcoin-bot',
+      uptime: process.uptime()
+    });
   });
-});
 
-app.listen(config.port, () => {
-  logger.info(`Healthcheck server running on port ${config.port}`);
-});
+  app.listen(config.port, () => {
+    logger.info(`Web server running on port ${config.port}`);
+  });
 
-// Initialize Telegram Bot
-const bot = new TelegramBot(config.botToken, { polling: true });
+  // 3. Initialize Telegram Bot
+  const bot = new TelegramBot(config.botToken, { polling: true });
 
-bot.on('polling_error', (error) => {
-  logger.error(`Polling error: ${error.code} - ${error.message}`);
-});
+  bot.on('polling_error', (error) => {
+    logger.error(`Polling error: ${error.code} - ${error.message}`);
+  });
 
-logger.info(`Bot is starting...`);
+  logger.info(`Bot is starting...`);
 
-// Commands
-bot.onText(/^\/start/, (msg) => commandHandler.handleStart(bot, msg));
-bot.onText(/^\/shop/, (msg) => commandHandler.handleShop(bot, msg));
-bot.onText(/^\/myaccess/, (msg) => commandHandler.handleMyAccess(bot, msg));
-bot.onText(/^\/support/, (msg) => commandHandler.handleSupport(bot, msg));
+  // Commands
+  bot.onText(/^\/start/, (msg) => commandHandler.handleStart(bot, msg));
+  bot.onText(/^\/shop/, (msg) => commandHandler.handleShop(bot, msg));
+  bot.onText(/^\/myaccess/, (msg) => commandHandler.handleMyAccess(bot, msg));
+  bot.onText(/^\/support/, (msg) => commandHandler.handleSupport(bot, msg));
 
-// Callbacks (Inline Buttons)
-bot.on('callback_query', (query) => paymentHandler.handleCallbackQuery(bot, query));
+  // Callbacks
+  bot.on('callback_query', (query) => paymentHandler.handleCallbackQuery(bot, query));
+  bot.on('pre_checkout_query', (query) => paymentHandler.handlePreCheckoutQuery(bot, query));
+  bot.on('successful_payment', (msg) => paymentHandler.handleSuccessfulPayment(bot, msg));
 
-// PreCheckoutQuery
-bot.on('pre_checkout_query', (query) => paymentHandler.handlePreCheckoutQuery(bot, query));
+  logger.info(`Bot successfully initialized and listening for updates.`);
+}
 
-// Successful Payment
-bot.on('successful_payment', (msg) => paymentHandler.handleSuccessfulPayment(bot, msg));
-
-logger.info(`Bot successfully initialized and listening for updates.`);
+runBot();
