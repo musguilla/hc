@@ -23,6 +23,20 @@ initDataStorage();
 // Initialize Express Healthcheck Server
 const app = express();
 const path = require('path');
+const session = require('express-session');
+const adminRoutes = require('./routes/admin');
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'hashcoin_super_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 1 day
+}));
+
+// Admin panel route
+app.use('/admin', adminRoutes);
+
 // Serve static assets without intercepting / automatically (since index.html was renamed to home.html)
 app.use(express.static(path.join(__dirname, '../public')));
 
