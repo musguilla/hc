@@ -22,13 +22,8 @@ initDataStorage();
 
 // Initialize Express Healthcheck Server
 const app = express();
-app.get('/', (req, res) => {
-  res.json({
-    status: 'ok',
-    service: 'hashcoin-bot',
-    uptime: process.uptime()
-  });
-});
+// Serve static files from the 'public' directory for the landing page
+app.use(express.static('public'));
 
 app.get('/health', (req, res) => {
   res.json({

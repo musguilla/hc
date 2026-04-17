@@ -1,0 +1,318 @@
+/**
+ * Memoria como Código:
+ * - Se emplean Best Practices visuales (Dark Mode, Typography Outfit, Glassmorphism).
+ * - Animaciones sutiles 'micro-animations' para sensación Premium (hover effects, floating phone).
+ * - Diseño Fully Responsive con Flexbox y CSS Grid.
+ */
+
+:root {
+  --ag-sys-background: #050505;
+  --ag-sys-surface: rgba(20, 20, 20, 0.6);
+  --ag-sys-primary: #00F4CB;
+  --ag-sys-primary-glow: rgba(0, 244, 203, 0.4);
+  --ag-sys-text-main: #FFFFFF;
+  --ag-sys-text-muted: #A1A1A1;
+  --ag-sys-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--ag-sys-background);
+  color: var(--ag-sys-text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background Blobs for glowing effect */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: 0;
+  opacity: 0.5;
+}
+
+.blob-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--ag-sys-primary-glow);
+  top: -100px;
+  right: -100px;
+  animation: float 8s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 300px;
+  height: 300px;
+  background: rgba(0, 100, 255, 0.3);
+  bottom: -50px;
+  left: -50px;
+  animation: float 10s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(30px) scale(1.1); }
+}
+
+/* Layout */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+/* Hero Content */
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+  animation: slideInLeft 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.brand-logo {
+  height: 60px;
+  margin-bottom: 2rem;
+  filter: drop-shadow(0 0 10px var(--ag-sys-primary-glow));
+}
+
+.fallback-text {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  letter-spacing: -1px;
+}
+
+.highlight {
+  color: var(--ag-sys-primary);
+}
+
+.hero-title {
+  font-size: 4.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+}
+
+.highlight-gradient {
+  background: linear-gradient(135deg, var(--ag-sys-text-main), var(--ag-sys-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--ag-sys-text-muted);
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+/* CTA Button */
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: var(--ag-sys-primary);
+  color: var(--ag-sys-background);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px -10px var(--ag-sys-primary);
+}
+
+.cta-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 15px 40px -10px var(--ag-sys-primary);
+  background: #00ffda;
+}
+
+.cta-button svg {
+  transition: transform 0.3s;
+}
+
+.cta-button:hover svg {
+  transform: translateX(4px);
+}
+
+/* Phone Mockup */
+.hero-visual {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  perspective: 1000px;
+  animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.phone-mockup {
+  width: 320px;
+  height: 650px;
+  background: #0d0d0d;
+  border-radius: 40px;
+  border: 8px solid #222;
+  box-shadow: 
+    0 0 0 2px #444,
+    0 30px 60px rgba(0,0,0,0.8),
+    inset 0 0 10px rgba(0,244,203,0.1);
+  position: relative;
+  overflow: hidden;
+  transform: rotateY(-10deg) rotateX(5deg);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.phone-mockup:hover {
+  transform: rotateY(-5deg) rotateX(2deg) translateY(-10px);
+}
+
+.phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 25px;
+  background: #222;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+  z-index: 10;
+}
+
+.phone-screen {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #111, #0a0a0c);
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  padding: 40px 20px 20px;
+  background: var(--ag-sys-surface);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ag-sys-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.app-balance {
+  font-size: 0.9rem;
+  color: var(--ag-sys-primary);
+  background: rgba(0, 244, 203, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.app-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  flex: 1;
+}
+
+.card {
+  background: var(--ag-sys-surface);
+  border: 1px solid var(--ag-sys-border);
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: transform 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ag-sys-primary);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.card-info h4 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.card-info p {
+  font-size: 0.8rem;
+  color: var(--ag-sys-primary);
+}
+
+.app-bottom-bar {
+  height: 5px;
+  width: 120px;
+  background: #fff;
+  border-radius: 5px;
+  margin: 15px auto;
+  opacity: 0.2;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 4rem;
+  }
+  
+  .hero-content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .phone-mockup {
+    transform: none;
+    margin-top: 2rem;
+  }
+  
+  .phone-mockup:hover {
+    transform: translateY(-10px);
+  }
+}
