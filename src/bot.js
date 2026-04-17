@@ -23,10 +23,17 @@ initDataStorage();
 // Initialize Express Healthcheck Server
 const app = express();
 const path = require('path');
-// Serve static landing page on /app to avoid breaking OLA CLOUD healthchecks on root
-app.use('/app', express.static(path.join(__dirname, '../public')));
+// Serve static assets without intercepting / automatically (since index.html was renamed to home.html)
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('/', (req, res) => {
+  const ua = req.headers['user-agent'] || '';
+  const isBrowser = ua.includes('Mozilla') || ua.includes('Chrome') || ua.includes('Safari') || ua.includes('AppleWebKit');
+  
+  if (isBrowser) {
+    return res.sendFile(path.join(__dirname, '../public/home.html'));
+  }
+  
   res.json({
     status: 'ok',
     service: 'hashcoin-bot',
