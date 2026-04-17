@@ -12,11 +12,12 @@ function requireAuth(req, res, next) {
 }
 
 // Helper to get stats
-function getStats() {
-  const purchases = getPurchases().filter(p => p.status === 'paid');
+async function getStats() {
+  const purchases = await getPurchases(); // Filter is handled via SQL if needed, but here we just get all for stats
+  const validPurchases = purchases.filter(p => p.status === 'paid');
   
   let totalXTR = 0;
-  purchases.forEach(p => {
+  validPurchases.forEach(p => {
     totalXTR += p.amount;
   });
   
@@ -25,8 +26,8 @@ function getStats() {
   return {
     totalRevenueXTR: totalXTR,
     totalRevenueUSD: parseFloat(totalUSD),
-    totalSales: purchases.length,
-    recentPurchases: purchases.sort((a, b) => new Date(b.paidAt) - new Date(a.paidAt))
+    totalSales: validPurchases.length,
+    recentPurchases: validPurchases
   };
 }
 
@@ -122,8 +123,8 @@ router.get('/logout', (req, res) => {
 });
 
 // GET /admin (Dashboard)
-router.get('/', requireAuth, (req, res) => {
-  const stats = getStats();
+router.get('/', requireAuth, async (req, res) => {
+  const stats = await getStats();
   
   let tableRows = '';
   if (stats.recentPurchases.length === 0) {
@@ -198,8 +199,8 @@ router.get('/', requireAuth, (req, res) => {
 });
 
 // GET /admin/api/stats
-router.get('/api/stats', requireAuth, (req, res) => {
-  const stats = getStats();
+router.get('/api/stats', requireAuth, async (req, res) => {
+  const stats = await getStats();
   // Return only the requested stats in JSON
   res.json({
     totalRevenueXTR: stats.totalRevenueXTR,

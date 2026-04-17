@@ -1,14 +1,14 @@
 const { getProductByCode } = require('../services/product.service');
-const { getPurchases, savePurchases } = require('../data');
+const { savePurchase } = require('../data');
 const { ensureUser } = require('./command.handler');
 const logger = require('../utils/logger');
 
-function handleCallbackQuery(bot, query) {
+async function handleCallbackQuery(bot, query) {
   const data = query.data;
   if (!data || !data.startsWith('buy_')) return;
   
   // ensure user is recorded
-  ensureUser(query);
+  await ensureUser(query);
   
   const productCode = data.replace('buy_', '');
   const product = getProductByCode(productCode);
@@ -35,9 +35,9 @@ function handleCallbackQuery(bot, query) {
   });
 }
 
-function handlePreCheckoutQuery(bot, query) {
+async function handlePreCheckoutQuery(bot, query) {
   // Telegram calls this to confirm the user can proceed with Payment.
-  ensureUser(query);
+  await ensureUser(query);
   
   const payload = query.invoice_payload;
   if (!payload || !payload.startsWith('ext_payload_')) {
@@ -54,8 +54,8 @@ function handlePreCheckoutQuery(bot, query) {
   });
 }
 
-function handleSuccessfulPayment(bot, msg) {
-  ensureUser(msg);
+async function handleSuccessfulPayment(bot, msg) {
+  await ensureUser(msg);
   
   const payment = msg.successful_payment;
   const payload = payment.invoice_payload;
@@ -66,15 +66,6 @@ function handleSuccessfulPayment(bot, msg) {
   // payload format: ext_payload_<code>_timestamp
   // Reconstruct code in case code contains underscores
   const productCode = parts.slice(2, parts.length - 1).join('_');
-  
-  const purchases = getPurchases();
-  
-  // Prevent duplicate processing
-  const existingPurchase = purchases.find(p => p.telegramPaymentChargeId === payment.telegram_payment_charge_id);
-  if (existingPurchase) {
-    logger.warn(`Duplicate payment skipped. Charge ID: ${payment.telegram_payment_charge_id}`);
-    return;
-  }
   
   const newPurchase = {
     id: `pch_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`,
@@ -89,8 +80,8 @@ function handleSuccessfulPayment(bot, msg) {
     paidAt: new Date().toISOString()
   };
   
-  purchases.push(newPurchase);
-  savePurchases(purchases);
+  // Database saves and handles duplicates natively with ON CONFLICT DO NOTHING
+  await savePurchase(newPurchase);
   
   logger.info(`Successful payment by ${msg.from.id} for ${productCode} (${payment.total_amount} XTR)`);
   

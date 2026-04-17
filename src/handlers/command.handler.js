@@ -1,36 +1,25 @@
-const { getUsers, saveUsers, getPurchases } = require('../data');
+const { ensureUserRecord, getUserPurchases } = require('../data');
 const config = require('../config');
 const { getProducts } = require('../services/product.service');
 
-function ensureUser(msg) {
-  const users = getUsers();
+async function ensureUser(msg) {
   const telegramId = msg.from.id;
-  const existingUser = users.find(u => u.telegramId === telegramId);
-  
-  if (!existingUser) {
-    const newUser = {
-      telegramId,
-      username: msg.from.username || '',
-      firstName: msg.from.first_name || '',
-      lastName: msg.from.last_name || '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    users.push(newUser);
-    saveUsers(users);
-  }
+  const username = msg.from.username || '';
+  const firstName = msg.from.first_name || '';
+  const lastName = msg.from.last_name || '';
+  await ensureUserRecord(telegramId, username, firstName, lastName);
 }
 
-function handleStart(bot, msg) {
-  ensureUser(msg);
+async function handleStart(bot, msg) {
+  await ensureUser(msg);
   const chatId = msg.chat.id;
   const welcomeText = `Welcome to <b>Hashcoin Bot</b>! 🪙\n\nYour premium digital shop right in Telegram. We offer exclusive digital products and access passes.\n\nUse our commands to navigate:\n🛍 /shop - Browse our digital products\n🔑 /myaccess - View your purchased access and content\n💬 /support - Get help from our team`;
   
   bot.sendMessage(chatId, welcomeText, { parse_mode: 'HTML' });
 }
 
-function handleShop(bot, msg) {
-  ensureUser(msg);
+async function handleShop(bot, msg) {
+  await ensureUser(msg);
   const chatId = msg.chat.id;
   const products = getProducts();
   
@@ -47,12 +36,12 @@ function handleShop(bot, msg) {
   });
 }
 
-function handleMyAccess(bot, msg) {
-  ensureUser(msg);
+async function handleMyAccess(bot, msg) {
+  await ensureUser(msg);
   const chatId = msg.chat.id;
   const telegramId = msg.from.id;
   
-  const purchases = getPurchases().filter(p => p.telegramId === telegramId && p.status === 'paid');
+  const purchases = await getUserPurchases(telegramId);
   
   if (purchases.length === 0) {
     return bot.sendMessage(chatId, 'You don\'t have any active purchases yet. Visit /shop to get started!');
@@ -66,8 +55,8 @@ function handleMyAccess(bot, msg) {
   bot.sendMessage(chatId, accessText, { parse_mode: 'HTML' });
 }
 
-function handleSupport(bot, msg) {
-  ensureUser(msg);
+async function handleSupport(bot, msg) {
+  await ensureUser(msg);
   const chatId = msg.chat.id;
   bot.sendMessage(chatId, config.supportText, { parse_mode: 'HTML' });
 }
