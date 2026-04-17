@@ -22,8 +22,17 @@ initDataStorage();
 
 // Initialize Express Healthcheck Server
 const app = express();
-// Serve static files from the 'public' directory for the landing page
-app.use(express.static('public'));
+const path = require('path');
+// Serve static landing page on /app to avoid breaking OLA CLOUD healthchecks on root
+app.use('/app', express.static(path.join(__dirname, '../public')));
+
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'hashcoin-bot',
+    uptime: process.uptime()
+  });
+});
 
 app.get('/health', (req, res) => {
   res.json({
