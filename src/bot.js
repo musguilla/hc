@@ -37,23 +37,8 @@ app.use(session({
 // Admin panel route
 app.use('/admin', adminRoutes);
 
-// Serve static assets without intercepting / automatically (since index.html was renamed to home.html)
+// Serve static assets automatically (index.html will handle /)
 app.use(express.static(path.join(__dirname, '../public')));
-
-app.get('/', (req, res) => {
-  const ua = req.headers['user-agent'] || '';
-  const isBrowser = ua.includes('Mozilla') || ua.includes('Chrome') || ua.includes('Safari') || ua.includes('AppleWebKit');
-  
-  if (isBrowser) {
-    return res.sendFile(path.join(__dirname, '../public/home.html'));
-  }
-  
-  res.json({
-    status: 'ok',
-    service: 'hashcoin-bot',
-    uptime: process.uptime()
-  });
-});
 
 app.get('/health', (req, res) => {
   res.json({
