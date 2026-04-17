@@ -107,7 +107,7 @@ router.post('/login', expressUrlencoded, (req, res) => {
   const { username, password } = req.body;
   
   // HARDCODED credentials as requested
-  if (username === 'admin' && password === 'Izzy#5577') {
+  if (username === 'admin' && password === 'Izzy#5537') {
     req.session.authenticated = true;
     res.redirect('/admin');
   } else {
