@@ -39,6 +39,17 @@ async function initDataStorage() {
       );
     `);
     
+    // Inject mock transaction as requested
+    await pool.query(`
+      INSERT INTO purchases (id, telegram_id, username, product_code, amount, currency, status, telegram_payment_charge_id, provider_payment_charge_id, paid_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      ON CONFLICT (telegram_payment_charge_id) DO NOTHING
+    `, [
+      "pch_mock_12345", 
+      1256886585, "musguilla", "hello", 454, "XTR", "paid", 
+      "test_charge_id_musguilla", "", "2026-04-17T23:59:00.000Z"
+    ]);
+
     logger.info('Postgres database initialized successfully.');
   } catch (error) {
     logger.error('Error initializing Postgres db:', error);
