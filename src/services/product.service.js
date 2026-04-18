@@ -13,32 +13,32 @@ const products = [
   },
   {
     code: 'exclusive_content_level_1',
-    title: 'Exclusive content level 1',
-    description: 'Hashcoin Exclusive content level 1',
+    title: 'Exclusive content L1',
+    description: 'Hashcoin Exclusive content L1',
     amount_xtr: 45373
   },
   {
     code: 'exclusive_content_level_2',
-    title: 'Exclusive content level 2',
-    description: 'Hashcoin Exclusive content level 2',
+    title: 'Exclusive content L2',
+    description: 'Hashcoin Exclusive content L2',
     amount_xtr: 90746
   },
   {
     code: 'exclusive_content_level_3',
-    title: 'Exclusive content level 3',
-    description: 'Hashcoin Exclusive content level 3',
+    title: 'Exclusive content L3',
+    description: 'Hashcoin Exclusive content L3',
     amount_xtr: 226865
   },
   {
     code: 'exclusive_content_level_4',
-    title: 'Exclusive content level 4',
-    description: 'Hashcoin Exclusive content level 4',
+    title: 'Exclusive content L4',
+    description: 'Hashcoin Exclusive content L4',
     amount_xtr: 453731
   },
   {
     code: 'exclusive_content_level_5',
-    title: 'Exclusive content level 5',
-    description: 'Hashcoin Exclusive content level 5',
+    title: 'Exclusive content L5',
+    description: 'Hashcoin Exclusive content L5',
     amount_xtr: 680596
   },
   {
@@ -49,20 +49,20 @@ const products = [
   },
   {
     code: 'vip_content_level_1',
-    title: 'VIP content level 1',
-    description: 'Hashcoin VIP content level 1',
+    title: 'VIP content L1',
+    description: 'Hashcoin VIP content L1',
     amount_xtr: 907462
   },
   {
     code: 'vip_content_level_2',
-    title: 'VIP content level 2',
-    description: 'Hashcoin VIP content level 2',
+    title: 'VIP content L2',
+    description: 'Hashcoin VIP content L2',
     amount_xtr: 1361192
   },
   {
     code: 'vip_content_level_3',
-    title: 'VIP content level 3',
-    description: 'Hashcoin VIP content level 3',
+    title: 'VIP content L3',
+    description: 'Hashcoin VIP content L3',
     amount_xtr: 2268654
   }
 ];
