@@ -1,6 +1,7 @@
 const { ensureUserRecord, getUserPurchases } = require('../data');
 const config = require('../config');
 const { getProducts } = require('../services/product.service');
+const { getEstimatedUSD } = require('../utils/conversion');
 
 async function ensureUser(msg) {
   const telegramId = msg.from.id;
@@ -24,9 +25,9 @@ async function handleShop(bot, msg) {
   const products = getProducts();
   
   const inlineKeyboard = products.map(product => {
-    const usdValue = (product.amount_xtr * 0.02).toFixed(2);
+    const usdValue = getEstimatedUSD(product.amount_xtr);
     return [{
-      text: `⭐️ ${product.title} - ${product.amount_xtr} XTR ($${usdValue})`,
+      text: `⭐️ ${product.title} - ${product.amount_xtr} XTR (Est: $${usdValue})`,
       callback_data: `buy_${product.code}`
     }];
   });
@@ -52,8 +53,8 @@ async function handleMyAccess(bot, msg) {
   
   let accessText = '🔑 <b>Your Purchased Access:</b>\n\n';
   purchases.forEach(p => {
-    const usdValue = (p.amount * 0.02).toFixed(2);
-    accessText += `🔹 <b>${p.productCode}</b> • ${p.amount} ${p.currency} ($${usdValue})\n  <i>Purchased on: ${new Date(p.paidAt).toLocaleDateString()}</i>\n\n`;
+    const usdValue = getEstimatedUSD(p.amount);
+    accessText += `🔹 <b>${p.productCode}</b> • ${p.amount} ${p.currency} (Est: $${usdValue})\n  <i>Purchased on: ${new Date(p.paidAt).toLocaleDateString()}</i>\n\n`;
   });
   
   bot.sendMessage(chatId, accessText, { parse_mode: 'HTML' });

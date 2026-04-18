@@ -1,5 +1,6 @@
 const express = require('express');
 const { getPurchases } = require('../data');
+const { getEstimatedUSD } = require('../utils/conversion');
 
 const router = express.Router();
 
@@ -21,11 +22,11 @@ async function getStats() {
     totalXTR += p.amount;
   });
   
-  const totalUSD = (totalXTR * 0.013).toFixed(2);
+  const totalUSD = getEstimatedUSD(totalXTR);
   
   return {
     totalRevenueXTR: totalXTR,
-    totalRevenueUSD: parseFloat(totalUSD),
+    totalRevenueUSD: totalUSD,
     totalSales: validPurchases.length,
     recentPurchases: validPurchases
   };
@@ -207,7 +208,7 @@ router.get('/', requireAuth, async (req, res) => {
           </div>
           <div class="stat-card">
             <div class="stat-title">Estimated Value (USD)</div>
-            <div class="stat-value">$${stats.totalRevenueUSD} <div class="stat-badge">≈ 0.013/XTR</div></div>
+            <div class="stat-value">$${stats.totalRevenueUSD}</div>
           </div>
           <div class="stat-card">
             <div class="stat-title">Total Sales</div>
