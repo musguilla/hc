@@ -23,10 +23,13 @@ async function handleShop(bot, msg) {
   const chatId = msg.chat.id;
   const products = getProducts();
   
-  const inlineKeyboard = products.map(product => ([{
-    text: `⭐️ ${product.title} - ${product.amount_xtr} XTR`,
-    callback_data: `buy_${product.code}`
-  }]));
+  const inlineKeyboard = products.map(product => {
+    const usdValue = (product.amount_xtr * 0.02).toFixed(2);
+    return [{
+      text: `⭐️ ${product.title} - ${product.amount_xtr} XTR ($${usdValue})`,
+      callback_data: `buy_${product.code}`
+    }];
+  });
   
   bot.sendMessage(chatId, '🛍 <b>Hashcoin Shop</b>\nSelect a product below to purchase using Telegram Stars:', {
     parse_mode: 'HTML',
@@ -49,7 +52,8 @@ async function handleMyAccess(bot, msg) {
   
   let accessText = '🔑 <b>Your Purchased Access:</b>\n\n';
   purchases.forEach(p => {
-    accessText += `🔹 <b>${p.productCode}</b> • ${p.amount} ${p.currency}\n  <i>Purchased on: ${new Date(p.paidAt).toLocaleDateString()}</i>\n\n`;
+    const usdValue = (p.amount * 0.02).toFixed(2);
+    accessText += `🔹 <b>${p.productCode}</b> • ${p.amount} ${p.currency} ($${usdValue})\n  <i>Purchased on: ${new Date(p.paidAt).toLocaleDateString()}</i>\n\n`;
   });
   
   bot.sendMessage(chatId, accessText, { parse_mode: 'HTML' });

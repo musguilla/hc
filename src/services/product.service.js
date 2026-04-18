@@ -3,7 +3,7 @@ const products = [
     code: 'hello',
     title: 'Hello',
     description: 'Hashcoin Hello Test Product',
-    amount_xtr: 454
+    amount_xtr: 250
   },
   {
     code: 'member_access',

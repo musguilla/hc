@@ -85,7 +85,8 @@ async function handleSuccessfulPayment(bot, msg) {
   
   logger.info(`Successful payment by ${msg.from.id} for ${productCode} (${payment.total_amount} XTR)`);
   
-  const successText = `✅ <b>Payment Successful!</b>\n\nThank you for your purchase.\n\n🔹 <b>Product:</b> ${productCode}\n🔹 <b>Amount:</b> ${payment.total_amount} ${payment.currency}\n\nYou can view your access anytime using /myaccess.`;
+  const usdValue = (payment.total_amount * 0.02).toFixed(2);
+  const successText = `✅ <b>Payment Successful!</b>\n\nThank you for your purchase.\n\n🔹 <b>Product:</b> ${productCode}\n🔹 <b>Amount:</b> ${payment.total_amount} ${payment.currency} ($${usdValue})\n\nYou can view your access anytime using /myaccess.`;
   
   bot.sendMessage(msg.chat.id, successText, { parse_mode: 'HTML' });
 }
