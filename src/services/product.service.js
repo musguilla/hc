@@ -29,42 +29,6 @@ const products = [
     description: 'Hashcoin Exclusive L3',
     amount_xtr: 100000
   },
-  {
-    code: 'exclusive_content_level_4',
-    title: 'Exclusive L4',
-    description: 'Hashcoin Exclusive L4',
-    amount_xtr: 100000
-  },
-  {
-    code: 'exclusive_content_level_5',
-    title: 'Exclusive L5',
-    description: 'Hashcoin Exclusive L5',
-    amount_xtr: 100000
-  },
-  {
-    code: 'vip_access',
-    title: 'VIP Access',
-    description: 'Hashcoin VIP Access',
-    amount_xtr: 45373
-  },
-  {
-    code: 'vip_content_level_1',
-    title: 'VIP L1',
-    description: 'Hashcoin VIP L1',
-    amount_xtr: 100000
-  },
-  {
-    code: 'vip_content_level_2',
-    title: 'VIP L2',
-    description: 'Hashcoin VIP L2',
-    amount_xtr: 100000
-  },
-  {
-    code: 'vip_content_level_3',
-    title: 'VIP L3',
-    description: 'Hashcoin VIP L3',
-    amount_xtr: 100000
-  }
 ];
 
 function getProducts() {
