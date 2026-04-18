@@ -27,19 +27,19 @@ const products = [
     code: 'exclusive_content_level_3',
     title: 'Exclusive L3',
     description: 'Hashcoin Exclusive L3',
-    amount_xtr: 226865
+    amount_xtr: 100000
   },
   {
     code: 'exclusive_content_level_4',
     title: 'Exclusive L4',
     description: 'Hashcoin Exclusive L4',
-    amount_xtr: 453731
+    amount_xtr: 100000
   },
   {
     code: 'exclusive_content_level_5',
     title: 'Exclusive L5',
     description: 'Hashcoin Exclusive L5',
-    amount_xtr: 680596
+    amount_xtr: 100000
   },
   {
     code: 'vip_access',
@@ -51,19 +51,19 @@ const products = [
     code: 'vip_content_level_1',
     title: 'VIP L1',
     description: 'Hashcoin VIP L1',
-    amount_xtr: 907462
+    amount_xtr: 100000
   },
   {
     code: 'vip_content_level_2',
     title: 'VIP L2',
     description: 'Hashcoin VIP L2',
-    amount_xtr: 1361192
+    amount_xtr: 100000
   },
   {
     code: 'vip_content_level_3',
     title: 'VIP L3',
     description: 'Hashcoin VIP L3',
-    amount_xtr: 2268654
+    amount_xtr: 100000
   }
 ];
 
